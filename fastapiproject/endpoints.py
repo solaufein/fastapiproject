@@ -7,6 +7,7 @@ from fastapi import HTTPException
 
 from fastapiproject.services import SearchService
 from .containers import Container
+from .model.models import User
 
 router = APIRouter()
 
@@ -34,10 +35,10 @@ async def read_generic_error(search_service: SearchService = Depends(Provide[Con
 
 
 # Route that runs successfully
-@router.get("/users/{user_id}")
+@router.get("/users/{user_id}", response_model=User, response_model_exclude_unset=True)
 @inject
-async def no_error(user_id: int, search_service: SearchService = Depends(Provide[Container.search_service]), ):
+async def get_user(user_id: int, search_service: SearchService = Depends(Provide[Container.search_service]), ) -> User:
     result = search_service.get_user_by_id(user_id)
     logger.info(f"User: {result}")
 
-    return {"Hello": f"User: {result}"}
+    return result

@@ -26,7 +26,7 @@ def get_logging_config():
         },
         "formatters": {
             "default": {
-                "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                "format": "%(asctime)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s",
             },
         },
         "handlers": {
@@ -62,7 +62,7 @@ def get_logging_config():
                 "propagate": False,
             },
             "uvicorn.access": {  # Uvicorn access logs
-                "level": "INFO",  # Set to WARNING to suppress INFO logs
+                "level": "WARNING",  # Set to WARNING to suppress INFO logs
                 "handlers": ["console"],
                 "propagate": False,
             },
