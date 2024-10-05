@@ -4,6 +4,8 @@
 
 ## How to run app
     uvicorn fastapiproject.application:app --reload
+    or 
+    pycharm run main.py
 
 ## How to run API
 - http://127.0.0.1:8000/docs

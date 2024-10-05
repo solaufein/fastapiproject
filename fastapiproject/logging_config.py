@@ -5,7 +5,7 @@ class HealthCheckFilter(logging.Filter):
     def filter(self, record):
         # return record.getMessage().find("/healthcheck") == -1
 
-        if (record.args and len(record.args) >= 2):
+        if (record.args and len(record.args) > 2):
             request_method = record.args[1]
             query_string = record.args[2]
             return request_method == 'GET' and not query_string in [
@@ -18,7 +18,7 @@ class HealthCheckFilter(logging.Filter):
 def get_logging_config():
     log_config = {
         "version": 1,
-        "disable_existing_loggers": False,
+        "disable_existing_loggers": True,
         "filters": {
             "healthcheckfilter": {
                 "()": HealthCheckFilter,
@@ -62,6 +62,11 @@ def get_logging_config():
                 "propagate": False,
             },
             "uvicorn.access": {  # Uvicorn access logs
+                "level": "WARNING",  # Set to WARNING to suppress INFO logs
+                "handlers": ["console"],
+                "propagate": False,
+            },
+            "sqlalchemy.engine": {
                 "level": "INFO",  # Set to WARNING to suppress INFO logs
                 "handlers": ["console"],
                 "propagate": False,

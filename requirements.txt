@@ -7,3 +7,6 @@ pyyaml
 pytest-asyncio
 pytest-cov
 pydantic
+sqlalchemy
+psycopg2
+h2

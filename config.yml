@@ -1,3 +1,5 @@
+db:
+  url: "sqlite:///:memory:"
 default:
   query: "Dependency Injector"
   limit: 10
