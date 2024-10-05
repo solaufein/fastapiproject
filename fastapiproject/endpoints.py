@@ -23,8 +23,6 @@ async def healthcheck():
 @router.get("/error-http")
 @inject
 async def read_root(search_service: SearchService = Depends(Provide[Container.search_service]), ):
-    result = search_service.get_user_by_id(1)
-
     raise HTTPException(status_code=400, detail=f"This is a bad request.")
 
 
@@ -32,8 +30,6 @@ async def read_root(search_service: SearchService = Depends(Provide[Container.se
 @router.get("/error-generic")
 @inject
 async def read_generic_error(search_service: SearchService = Depends(Provide[Container.search_service]), ):
-    result = search_service.get_user_by_id(2)
-
     raise ValueError(f"An unexpected error occurred!")
 
 
