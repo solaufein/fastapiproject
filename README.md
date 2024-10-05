@@ -1,4 +1,5 @@
 ## How to install
+    .\venv\Scripts\activate
     pip install -r requirements.txt
 
 ## How to run app
