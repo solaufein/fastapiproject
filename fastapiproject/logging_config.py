@@ -9,7 +9,7 @@ class HealthCheckFilter(logging.Filter):
             request_method = record.args[1]
             query_string = record.args[2]
             return request_method == 'GET' and not query_string in [
-                "/healthcheck",
+                "/fastapi/healthcheck",
             ]
         else:
             return True
@@ -62,7 +62,7 @@ def get_logging_config():
                 "propagate": False,
             },
             "uvicorn.access": {  # Uvicorn access logs
-                "level": "WARNING",  # Set to WARNING to suppress INFO logs
+                "level": "INFO",  # Set to WARNING to suppress INFO logs
                 "handlers": ["console"],
                 "propagate": False,
             },

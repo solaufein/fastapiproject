@@ -9,7 +9,7 @@ from fastapiproject.services import SearchService
 from .containers import Container
 from .model.models import User
 
-router = APIRouter()
+router = APIRouter(prefix="/fastapi")
 
 logger = logging.getLogger(__name__)
 
