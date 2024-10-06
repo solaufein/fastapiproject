@@ -3,7 +3,7 @@ import logging
 from typing import List
 from uuid import uuid4
 
-from fastapiproject.db.repositories import UserRepository
+from fastapiproject.repositories.user_repository import UserRepository
 from fastapiproject.api.models import UserDto
 
 logger = logging.getLogger(__name__)

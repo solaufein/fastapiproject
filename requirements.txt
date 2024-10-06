@@ -9,4 +9,3 @@ pytest-cov
 pydantic
 sqlalchemy
 psycopg2
-h2

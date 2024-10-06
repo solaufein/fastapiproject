@@ -4,14 +4,14 @@ import logging.config
 
 from dependency_injector import containers, providers
 
-from .db.database import Database
-from .db.repositories import UserRepository
+from fastapiproject.db.database import Database
+from fastapiproject.repositories.user_repository import UserRepository
 from .logging_config import get_logging_config
-from .services import UserService
+from fastapiproject.services.user_service import UserService
 
 
 class Container(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(modules=[".api.endpoints"])
+    wiring_config = containers.WiringConfiguration(modules=["fastapiproject.api.endpoints"])
 
     config = providers.Configuration(yaml_files=["config.yml"])
 

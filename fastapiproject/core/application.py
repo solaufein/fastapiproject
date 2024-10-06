@@ -1,24 +1,26 @@
 """Application module."""
 
 import logging
+from uuid import uuid4
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from fastapiproject.api import endpoints
-from fastapiproject.containers import Container
+from fastapiproject.core.containers import Container
 
 
 class RequestIdHeaderMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
+        request_id = str(uuid4())
+
         try:
-            # Attempt to get a response from the route or next middleware
             response = await call_next(request)
         except Exception as exc:
             return exception_handler(request, exc)
 
-        response.headers["X-Request-Id"] = "Some Random Value"
+        response.headers["X-Request-Id"] = request_id
         return response
 
 

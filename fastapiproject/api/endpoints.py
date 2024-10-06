@@ -7,9 +7,9 @@ from fastapi import APIRouter, Depends, Response
 from fastapi import HTTPException
 from starlette import status
 
-from fastapiproject.services import UserService
-from fastapiproject.containers import Container
-from fastapiproject.db.repositories import NotFoundError
+from fastapiproject.services.user_service import UserService
+from fastapiproject.core.containers import Container
+from fastapiproject.repositories.user_repository import NotFoundError
 from fastapiproject.api.models import UserDto
 
 router = APIRouter(prefix="/fastapi")

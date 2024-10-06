@@ -3,7 +3,7 @@
     pip install -r requirements.txt
 
 ## How to run app
-    uvicorn fastapiproject.application:app --reload
+    uvicorn fastapiproject.core.application:app --reload
     or 
     pycharm run main.py
 
