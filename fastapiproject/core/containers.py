@@ -11,6 +11,7 @@ from ..services.worker_service import WorkerService
 
 
 def init_worker_pool(max_workers: int):
+    # max_workers = os.cpu_count()
     pool = ProcessPoolExecutor(max_workers=max_workers)
     yield pool
     pool.shutdown()
