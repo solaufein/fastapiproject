@@ -1,5 +1,8 @@
 """Endpoints module."""
 import logging
+import time
+import uuid
+from multiprocessing import Pool
 from typing import List
 
 from dependency_injector.wiring import inject, Provide
@@ -7,10 +10,10 @@ from fastapi import APIRouter, Depends, Response
 from fastapi import HTTPException
 from starlette import status
 
-from fastapiproject.services.user_service import UserService
+from fastapiproject.api.models import UserDto
 from fastapiproject.core.containers import Container
 from fastapiproject.repositories.user_repository import NotFoundError
-from fastapiproject.api.models import UserDto
+from fastapiproject.services.user_service import UserService
 
 router = APIRouter(prefix="/fastapi")
 
@@ -70,3 +73,36 @@ async def remove(user_id: int, user_service: UserService = Depends(Provide[Conta
         return Response(status_code=status.HTTP_404_NOT_FOUND)
     else:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.get("/task/start")
+@inject
+async def start_task(a: int, b: int,
+                     worker_pool: Pool = Depends(Provide[Container.worker_pool]),
+                     ):
+    task_id = str(uuid.uuid4())
+
+    worker_pool.apply_async(
+        heavy_task,
+        args=(task_id, a, b),
+        callback=lambda result: task_callback(task_id, result)
+    )
+
+    return {"task_id": task_id}
+
+
+@router.get("/task/status/{task_id}")
+@inject
+async def task_status(task_id: str):
+    return {"task_id": task_id, "status": 'in-progress'}
+
+
+def heavy_task(task_id, a, b):
+    logger.info(f"Starting Task {task_id} with params: {a}, {b}")
+    time.sleep(5)
+    return a * b
+
+
+def task_callback(task_id, result):
+    """Callback to update task status after completion."""
+    logger.info(f"Task {task_id} completed with result: {result}")

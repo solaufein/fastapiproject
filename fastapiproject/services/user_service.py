@@ -1,4 +1,3 @@
-"""Services module."""
 import logging
 from typing import List
 from uuid import uuid4

@@ -1,6 +1,7 @@
 """Application module."""
 
 import logging
+from contextlib import asynccontextmanager
 from uuid import uuid4
 
 from fastapi import FastAPI, Request, HTTPException
@@ -30,14 +31,22 @@ def exception_handler(request: Request, exc: Exception):
     return JSONResponse({"detail": str(exc)}, status_code=400)
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logging.info(f"Startup...")
+    c = app.container
+    c.init_resources()
+    db = c.db()
+    db.create_database()
+    yield
+    logging.info(f"Shutdown...")
+    c.shutdown_resources()
+
+
 def create_app() -> FastAPI:
     container = Container()
-    container.init_resources()
 
-    db = container.db()
-    db.create_database()
-
-    app = FastAPI()
+    app = FastAPI(lifespan=lifespan)
     app.container = container
     app.include_router(endpoints.router)
     app.add_middleware(RequestIdHeaderMiddleware)

@@ -13,3 +13,5 @@
 - http://127.0.0.1:8000/fastapi/users/{user_id}
 - http://127.0.0.1:8000/fastapi/error-http
 - http://127.0.0.1:8000/fastapi/error-generic
+- http://127.0.0.1:8000/fastapi/task/start?a=2&b=3
+- http://127.0.0.1:8000/fastapi/task/status/{task_id}

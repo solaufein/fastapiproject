@@ -1,13 +1,19 @@
-"""Containers module."""
-
 import logging.config
+from multiprocessing import Pool
 
 from dependency_injector import containers, providers
 
 from fastapiproject.db.database import Database
 from fastapiproject.repositories.user_repository import UserRepository
-from .logging_config import get_logging_config
 from fastapiproject.services.user_service import UserService
+from .logging_config import get_logging_config
+
+
+def init_worker_pool(workers: int):
+    pool = Pool(workers)
+    yield pool
+    pool.close()
+    pool.join()
 
 
 class Container(containers.DeclarativeContainer):
@@ -30,7 +36,12 @@ class Container(containers.DeclarativeContainer):
         session_factory=db.provided.session,
     )
 
-    user_service = providers.Factory(
+    user_service = providers.Singleton(
         UserService,
         user_repository=user_repository
+    )
+
+    worker_pool = providers.Resource(
+        init_worker_pool,
+        workers=4
     )
