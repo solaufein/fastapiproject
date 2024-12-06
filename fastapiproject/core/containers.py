@@ -7,6 +7,7 @@ from fastapiproject.db.database import Database
 from fastapiproject.repositories.user_repository import UserRepository
 from fastapiproject.services.user_service import UserService
 from .logging_config import get_logging_config
+from ..services.worker_service import WorkerService
 
 
 def init_worker_pool(workers: int):
@@ -44,4 +45,9 @@ class Container(containers.DeclarativeContainer):
     worker_pool = providers.Resource(
         init_worker_pool,
         workers=4
+    )
+
+    worker_service = providers.Singleton(
+        WorkerService,
+        worker_pool=worker_pool
     )
