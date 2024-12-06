@@ -1,6 +1,5 @@
 """Endpoints module."""
 import logging
-import uuid
 from typing import List
 
 from dependency_injector.wiring import inject, Provide
@@ -79,8 +78,7 @@ async def remove(user_id: int, user_service: UserService = Depends(Provide[Conta
 async def start_task(a: int, b: int,
                      worker_service: WorkerService = Depends(Provide[Container.worker_service]),
                      ):
-    task_id = str(uuid.uuid4())
-    worker_service.start_task(a, b)
+    task_id = worker_service.start_task(a, b)
     return {"task_id": task_id}
 
 

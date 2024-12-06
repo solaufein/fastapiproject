@@ -1,5 +1,5 @@
 import logging.config
-from multiprocessing import Pool
+from concurrent.futures import ProcessPoolExecutor
 
 from dependency_injector import containers, providers
 
@@ -10,11 +10,10 @@ from .logging_config import get_logging_config
 from ..services.worker_service import WorkerService
 
 
-def init_worker_pool(workers: int):
-    pool = Pool(workers)
+def init_worker_pool(max_workers: int):
+    pool = ProcessPoolExecutor(max_workers=max_workers)
     yield pool
-    pool.close()
-    pool.join()
+    pool.shutdown()
 
 
 class Container(containers.DeclarativeContainer):
@@ -44,7 +43,7 @@ class Container(containers.DeclarativeContainer):
 
     worker_pool = providers.Resource(
         init_worker_pool,
-        workers=4
+        max_workers=4
     )
 
     worker_service = providers.Singleton(
