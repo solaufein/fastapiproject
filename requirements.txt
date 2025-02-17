@@ -8,4 +8,4 @@ pytest-asyncio
 pytest-cov
 pydantic
 sqlalchemy
-psycopg2
+psycopg2-binary
