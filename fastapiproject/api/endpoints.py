@@ -1,4 +1,5 @@
 """Endpoints module."""
+from datetime import datetime
 import logging
 from typing import List
 
@@ -52,19 +53,19 @@ async def get_user(user_id: int, user_service: UserService = Depends(Provide[Con
 
 @router.get("/users", response_model=List[UserDto])
 @inject
-async def get_list(user_service: UserService = Depends(Provide[Container.user_service]), ):
+async def get_users_list(user_service: UserService = Depends(Provide[Container.user_service]), ):
     return user_service.get_users()
 
 
 @router.post("/users", response_model=UserDto, status_code=status.HTTP_201_CREATED)
 @inject
-async def add(user_service: UserService = Depends(Provide[Container.user_service]), ):
+async def add_user(user_service: UserService = Depends(Provide[Container.user_service]), ):
     return user_service.create_user()
 
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 @inject
-async def remove(user_id: int, user_service: UserService = Depends(Provide[Container.user_service]), ):
+async def remove_user(user_id: int, user_service: UserService = Depends(Provide[Container.user_service]), ):
     try:
         user_service.delete_user_by_id(user_id)
     except NotFoundError:
@@ -75,17 +76,16 @@ async def remove(user_id: int, user_service: UserService = Depends(Provide[Conta
 
 @router.get("/task/start")
 @inject
-async def start_task(a: int, b: int,
-                     worker_service: WorkerService = Depends(Provide[Container.worker_service]),
-                     ):
-    task_id = worker_service.start_task(a, b)
-    return {"task_id": task_id}
+async def task_start(a: int, b: int,
+                     worker_service: WorkerService = Depends(Provide[Container.worker_service])):
+    asyncio_future = worker_service.start_task(a, b)
+    result = await asyncio_future
+    return {"status": "completed", "result": result, 'datetime': datetime.now()}
 
 
 @router.get("/task/status/{task_id}")
 @inject
 async def task_status(task_id: str,
-                      worker_service: WorkerService = Depends(Provide[Container.worker_service]),
-                      ):
-    result = worker_service.task_status(task_id)
+                      worker_service: WorkerService = Depends(Provide[Container.worker_service])):
+    result = await worker_service.task_status(task_id)
     return {"task_id": task_id, "status": result}

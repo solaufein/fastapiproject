@@ -1,5 +1,5 @@
 import logging.config
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 from dependency_injector import containers, providers
 
@@ -10,9 +10,9 @@ from .logging_config import get_logging_config
 from ..services.worker_service import WorkerService
 
 
-def init_worker_pool(max_workers: int):
+def init_worker_pool(max_workers: int = 4):
     # max_workers = os.cpu_count()
-    pool = ProcessPoolExecutor(max_workers=max_workers)
+    pool = ThreadPoolExecutor(max_workers=max_workers)
     yield pool
     pool.shutdown()
 
